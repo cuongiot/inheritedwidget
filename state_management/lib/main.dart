@@ -21,96 +21,78 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CounterWidget(
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text("Age counter"),
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Builder(builder: (context) {
-                final inherited = context
-                        .dependOnInheritedWidgetOfExactType<_InheritedCount>()
-                    as _InheritedCount;
-                return Text(
-                  inherited.state.count <= 1
-                      ? 'I am ${inherited.state.count} year old'
-                      : 'I am ${inherited.state.count} years old',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                );
-              }),
-              Builder(builder: (context) {
-                final ancestor =
-                    context.findAncestorWidgetOfExactType<_InheritedCount>()
-                        as _InheritedCount;
-                return ElevatedButton(
-                  onPressed: () => ancestor.state.incrementCount(),
-                  child: const Text("Increase Age"),
-                );
-              }),
-              Builder(builder: (context) {
-                final ancestor =
-                    context.findAncestorWidgetOfExactType<_InheritedCount>()
-                        as _InheritedCount;
-                return ElevatedButton(
-                  onPressed: () => ancestor.state.decrementCount(),
-                  child: const Text("Reduce age"),
-                );
-              }),
-            ],
+        body: const OngBa(
+          child: BoMe(
+            child: Column(
+              children: [Con1(), Con2()],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
 
-class CounterWidget extends StatefulWidget {
-  const CounterWidget({super.key, required this.child});
-
+class OngBa extends StatelessWidget {
+  const OngBa({super.key, required this.child});
   final Widget child;
 
-  @override
-  _CounterState createState() => _CounterState();
-}
-
-class _CounterState extends State<CounterWidget> {
-  late int count;
-
-  void incrementCount() {
-    setState(() {
-      ++count;
-    });
+  static OngBa? of(BuildContext context) {
+    return context.findAncestorWidgetOfExactType<OngBa>();
   }
 
-  void decrementCount() {
-    setState(() {
-      --count;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    count = 0;
+  layThongTinOngBa() {
+    print("Thông tin ông bà");
   }
 
   @override
   Widget build(BuildContext context) {
-    return _InheritedCount(
-      state: this,
-      child: widget.child,
+    return Container(
+      child: child,
     );
   }
 }
 
-class _InheritedCount extends InheritedWidget {
-  const _InheritedCount({super.key, required this.state, required super.child});
+class BoMe extends StatelessWidget {
+  const BoMe({super.key, required this.child});
+  final Widget child;
+  static BoMe? of(BuildContext context) {
+    return context.findAncestorWidgetOfExactType<BoMe>();
+  }
 
-  final _CounterState state;
+  layThongTinBoMe() {
+    print("Thông tin bố mẹ");
+  }
 
   @override
-  bool updateShouldNotify(_InheritedCount old) => true;
+  Widget build(BuildContext context) {
+    return Container(
+      child: child,
+    );
+  }
+}
+
+class Con1 extends StatelessWidget {
+  const Con1({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    OngBa? ongba = OngBa.of(context);
+    ongba?.layThongTinOngBa();
+
+    BoMe? boMe = BoMe.of(context);
+    boMe?.layThongTinBoMe();
+    return const Text("Con 1");
+  }
+}
+
+class Con2 extends StatelessWidget {
+  const Con2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text("Con 2");
+  }
 }
